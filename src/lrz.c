@@ -925,13 +925,13 @@ do_crc_check(FILE *f, size_t remote_bytes, size_t check_bytes)
     if (check_bytes==0 && ((size_t) st.st_size)!=remote_bytes)
         return ZCRC_DIFFERS; /* shortcut */
 
-    crc=0xFFFFFFFFL;
+    crc=0xFFFFFFFFUL;
     n=check_bytes;
     if (n==0)
         n=st.st_size;
     while (n-- && ((c = getc(f)) != EOF))
         crc = UPDC32(c, crc);
-    crc = ~crc;
+    crc = (~crc) & 0xffffffffUL;
     clearerr(f);  /* Clear EOF */
     fseeko(f, 0, 0);
 
